@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>胶东大饽饽 · 数字非遗展厅</title>
+<style>
+  :root{
+    --red:#b03a2e;
+    --red-deep:#8a2620;
+    --red-light:#c8554a;
+    --gold:#c9a24b;
+    --gold-light:#e8cf8a;
+    --paper:#f8f2e7;
+    --paper-deep:#efe4cf;
+    --ink:#2b1b12;
+    --muted:#7a6855;
+    --white:#fffdf8;
+    --shadow:0 18px 50px -18px rgba(90,45,20,.35);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"KaiTi","STKaiti","Noto Serif SC","SimSun",serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.8;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(circle at 20% 15%, rgba(200,160,90,.05), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(176,58,46,.05), transparent 50%),
+      repeating-linear-gradient(0deg, rgba(120,90,50,.015) 0 1px, transparent 1px 3px);
+  }
+  ::selection{background:var(--red);color:#fff;}
+  img{max-width:100%;display:block;}
+
+  /* ============ 顶部导航 ============ */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 5vw;transition:.4s ease;
+  }
+  header.scrolled{
+    background:rgba(248,242,231,.92);backdrop-filter:blur(10px);
+    box-shadow:0 4px 24px rgba(90,45,20,.12);padding-top:10px;padding-bottom:10px;
+  }
+  .logo{display:flex;align-items:center;gap:12px;}
+  .logo .seal{
+    width:44px;height:44px;flex:none;background:var(--red);color:#fff;
+    border-radius:8px;display:grid;place-items:center;font-size:22px;font-weight:700;line-height:1;
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.25);transform:rotate(-3deg);
+  }
+  .logo .name{font-size:20px;font-weight:700;letter-spacing:3px;}
+  .logo .name small{display:block;font-size:11px;letter-spacing:4px;color:var(--muted);font-weight:400;}
+  nav{display:flex;gap:2px;}
+  nav a{
+    text-decoration:none;color:var(--ink);font-size:15px;letter-spacing:1px;
+    padding:8px 13px;border-radius:6px;position:relative;transition:.25s;
+  }
+  nav a:hover{color:var(--red);}
+  nav a.active{color:var(--red);font-weight:700;}
+  nav a.active::after{
+    content:"";position:absolute;left:50%;bottom:2px;transform:translateX(-50%);
+    width:22px;height:3px;background:var(--gold);border-radius:2px;
+  }
+  .nav-toggle{display:none;font-size:26px;cursor:pointer;color:var(--ink);background:none;border:none;}
+
+  /* ============ 封面 ============ */
+  .hero{
+    position:relative;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:130px 6vw 360px;overflow:hidden;
+    background:
+      repeating-linear-gradient(0deg, rgba(120,90,50,.08) 0 1px, transparent 1px 4px),
+      repeating-linear-gradient(90deg, rgba(120,90,50,.05) 0 1px, transparent 1px 6px),
+      var(--paper);
+  }
+  .hero .clouds{position:absolute;inset:0;pointer-events:none;z-index:0;}
+  .hero .clouds .cld{position:absolute;fill:#8f8577;opacity:.07;animation:drift 18s ease-in-out infinite;}
+  .hero .clouds .cld:nth-child(1){top:11%;left:5%;width:118px;}
+  .hero .clouds .cld:nth-child(2){top:20%;right:7%;width:150px;animation-delay:-6s;}
+  .hero .clouds .cld:nth-child(3){top:47%;left:13%;width:96px;animation-delay:-11s;}
+  .hero .clouds .cld:nth-child(4){top:56%;right:11%;width:128px;animation-delay:-4s;}
+  @keyframes drift{0%,100%{transform:translate(0,0);}25%{transform:translate(12px,-10px);}50%{transform:translate(-8px,-4px);}75%{transform:translate(-14px,9px);}}
+  .corner-wm{position:absolute;inset:0;pointer-events:none;z-index:0;}
+  .corner-wm .wm{position:absolute;width:46px;height:46px;opacity:.08;stroke:var(--ink);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+  .corner-wm .wm-tl{top:92px;left:36px;}
+  .corner-wm .wm-tr{top:92px;right:36px;}
+  .corner-wm .wm-bl{bottom:52px;left:36px;}
+  .corner-wm .wm-br{bottom:52px;right:36px;}
+
+  .hero-inner{position:relative;z-index:3;max-width:900px;}
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;font-size:14px;letter-spacing:6px;color:var(--red);
+    padding:6px 20px;border:1px solid var(--gold);border-radius:30px;background:#fdf8ee;margin-bottom:28px;
+  }
+  .hero .eyebrow::before,.hero .eyebrow::after{content:"❖";color:var(--gold);font-size:11px;}
+  .hero h1{
+    font-size:clamp(40px,7vw,84px);font-weight:900;letter-spacing:6px;line-height:1.15;
+    color:var(--red-deep);text-shadow:0 14px 30px rgba(138,38,32,.22);
+  }
+  .hero h1 .big{color:var(--red);}
+  .hero .subtitle{font-size:clamp(16px,2.4vw,22px);color:var(--muted);letter-spacing:2px;margin-top:18px;}
+  .hero .verse{
+    margin:34px auto 0;max-width:620px;font-size:15px;color:var(--muted);
+    padding:18px 14px;letter-spacing:1px;
+    background:
+      linear-gradient(90deg, transparent, var(--gold), transparent) top / 100% 1px no-repeat,
+      linear-gradient(90deg, transparent, var(--gold), transparent) bottom / 100% 1px no-repeat,
+      var(--white);
+    border-radius:8px;
+  }
+  .hero .verse b{color:var(--red);}
+  .hero .digital-note{color:var(--gold);font-size:14px;letter-spacing:5px;margin-top:16px;}
+  .hero .cta{margin-top:30px;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;
+    padding:13px 30px;border-radius:40px;font-size:16px;letter-spacing:2px;
+    transition:.3s;cursor:pointer;font-family:inherit;border:none;
+  }
+  .btn-primary{background:var(--red);color:#fff;box-shadow:0 10px 24px -8px rgba(176,58,46,.6);}
+  .btn-primary:hover{background:var(--red-deep);transform:translateY(-2px);}
+  .btn-primary:disabled{opacity:.7;cursor:not-allowed;transform:none;}
+  .btn-ghost{border:1.5px solid var(--red);color:var(--red);background:transparent;}
+  .btn-ghost:hover{background:var(--red);color:#fff;}
+  .hero .btn-primary:hover{background:var(--red-deep);transform:translateY(-3px);box-shadow:0 0 0 1px rgba(232,207,138,.35),0 0 26px rgba(232,207,138,.5),0 14px 26px -8px rgba(176,58,46,.6);}
+  .hero .btn-ghost:hover{background:rgba(232,207,138,.10);color:var(--red);}
+
+  /* 蒸汽粒子画布 */
+  .steam-canvas{position:absolute;left:0;right:0;bottom:250px;height:300px;width:100%;pointer-events:none;z-index:2;}
+  /* 数字枣山饽饽 */
+  .mountain-scene{
+    position:absolute;bottom:0;left:50%;z-index:1;width:min(360px,80vw);
+    animation:floatY 6s ease-in-out infinite;filter:drop-shadow(0 20px 26px rgba(120,80,40,.28));
+  }
+  @keyframes floatY{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-10px);}}
+
+  .scroll-hint{
+    position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:3;
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .scroll-hint .arrow{width:13px;height:13px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(45deg);animation:pulseDown 2.2s ease-in-out infinite;}
+  .scroll-hint .arrow.a2{animation-delay:-.7s;margin-top:-6px;}
+  .scroll-hint .lbl{color:var(--muted);font-size:12px;letter-spacing:3px;margin-top:8px;}
+  @keyframes pulseDown{0%,100%{opacity:.3;transform:rotate(45deg) translate(0,0);}50%{opacity:1;transform:rotate(45deg) translate(3px,3px);}}
+
+  /* ============ 通用段落 ============ */
+  section{padding:96px 6vw;position:relative;}
+  .section-head{text-align:center;margin-bottom:56px;}
+  .section-head .tag{color:var(--gold);font-size:14px;letter-spacing:6px;font-weight:700;}
+  .section-head h2{font-size:clamp(30px,4.5vw,46px);letter-spacing:4px;color:var(--red-deep);margin:10px 0 16px;}
+  .section-head h2 .accent{color:var(--red);}
+  .section-head p{color:var(--muted);max-width:640px;margin:0 auto;font-size:16px;}
+  .divider{width:70px;height:3px;background:linear-gradient(90deg,var(--gold),var(--red));margin:14px auto 0;border-radius:2px;}
+
+  .module-head{text-align:center;margin:64px 0 34px;}
+  .module-head .mtag{color:var(--gold);font-size:13px;letter-spacing:6px;}
+  .module-head h3{font-size:clamp(24px,3.4vw,32px);color:var(--red-deep);letter-spacing:2px;margin:8px 0 6px;}
+  .module-head p{color:var(--muted);font-size:15px;}
+  .module-head .divider{width:58px;margin-top:12px;}
+
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.2,.7,.3,1),transform .9s cubic-bezier(.2,.7,.3,1);}
+  .reveal.in{opacity:1;transform:none;}
+
+  /* ============ 序厅 ============ */
+  #overview{background:var(--paper);}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:16px;}
+  .stat{
+    background:var(--white);border-radius:16px;padding:32px 20px;text-align:center;
+    box-shadow:var(--shadow);border:1px solid rgba(200,160,90,.25);position:relative;overflow:hidden;
+  }
+  .stat::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--red));}
+  .stat .num{font-size:clamp(30px,4vw,44px);font-weight:900;color:var(--red);line-height:1;}
+  .stat .num small{font-size:16px;font-weight:400;}
+  .stat .label{color:var(--muted);margin-top:10px;letter-spacing:2px;font-size:15px;}
+  .intro-cards{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;margin-top:60px;align-items:stretch;}
+  .intro-main,.intro-side{background:var(--white);border-radius:18px;padding:40px;box-shadow:var(--shadow);}
+  .intro-main h3{color:var(--red-deep);font-size:24px;letter-spacing:2px;margin-bottom:18px;}
+  .intro-main p{color:var(--muted);margin-bottom:14px;font-size:16px;text-align:justify;}
+  .intro-main p b{color:var(--red);}
+  .intro-side{background:linear-gradient(160deg,var(--red-deep),var(--red));color:#fdf0e4;display:flex;flex-direction:column;justify-content:center;}
+  .intro-side h3{color:var(--gold-light);font-size:22px;margin-bottom:18px;letter-spacing:2px;}
+  .intro-side li{list-style:none;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.18);font-size:16px;display:flex;gap:10px;}
+  .intro-side li::before{content:"◆";color:var(--gold-light);font-size:12px;margin-top:6px;}
+
+  /* ============ 历史 ============ */
+  #history{background:var(--paper-deep);}
+  .timeline{position:relative;max-width:860px;margin:0 auto;padding:20px 0;}
+  .timeline::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--gold),var(--red));transform:translateX(-50%);}
+  .tl-item{position:relative;width:50%;padding:0 44px 48px 0;}
+  .tl-item:nth-child(even){left:50%;padding:0 0 48px 44px;}
+  .tl-item .dot{position:absolute;right:-9px;top:6px;width:18px;height:18px;background:var(--red);border:3px solid var(--paper-deep);border-radius:50%;z-index:2;box-shadow:0 0 0 4px var(--gold);}
+  .tl-item:nth-child(even) .dot{left:-9px;right:auto;}
+  .tl-card{background:var(--white);border-radius:14px;padding:22px 24px;box-shadow:var(--shadow);}
+  .tl-card .year{color:var(--red);font-weight:900;font-size:20px;letter-spacing:1px;}
+  .tl-card h4{font-size:18px;margin:6px 0 8px;color:var(--ink);}
+  .tl-card p{color:var(--muted);font-size:15px;}
+
+  /* ============ 工艺 ============ */
+  #craft{background:var(--paper);}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .step{
+    background:var(--white);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+    position:relative;transition:.35s;border:1px solid rgba(200,160,90,.2);
+  }
+  .step:hover{transform:translateY(-8px);box-shadow:0 24px 50px -18px rgba(120,60,30,.4);}
+  .step-img{position:relative;height:165px;overflow:hidden;cursor:zoom-in;background:#f3e9d8;}
+  .step-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .step:hover .step-img img{transform:scale(1.06);}
+  .step-img .icon{position:absolute;top:12px;left:12px;width:44px;height:44px;border-radius:50%;background:var(--white);display:grid;place-items:center;font-size:22px;box-shadow:0 4px 12px rgba(120,60,30,.25);}
+  .step-img .no{position:absolute;top:10px;right:14px;font-size:42px;font-weight:900;color:rgba(255,255,255,.88);line-height:1;text-shadow:0 2px 10px rgba(120,60,30,.4);}
+  .step-body{padding:20px 22px 24px;}
+  .step-body h3{font-size:20px;color:var(--red-deep);margin-bottom:8px;letter-spacing:1px;}
+  .step-body h3 em{font-style:normal;color:var(--gold);font-size:14px;margin-left:8px;letter-spacing:2px;}
+  .step-body p{color:var(--muted);font-size:14px;line-height:1.7;}
+
+  /* ============ 纹样 ============ */
+  #pattern{background:var(--paper-deep);}
+  .patterns{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .pattern{
+    background:var(--white);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);
+    cursor:pointer;transition:.35s;border:1px solid rgba(200,160,90,.2);
+  }
+  .pattern:hover{transform:translateY(-6px);}
+  .pattern .pattern-img{position:relative;height:230px;overflow:hidden;cursor:zoom-in;background:#f3e9d8;}
+  .pattern .pattern-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .pattern:hover .pattern-img img{transform:scale(1.06);}
+  .pattern .info{padding:20px 22px;}
+  .pattern .info h3{font-size:18px;color:var(--red-deep);margin-bottom:6px;}
+  .pattern .info h3 .wish{font-size:13px;color:var(--gold);font-weight:400;margin-left:8px;letter-spacing:1px;}
+  .pattern .info p{color:var(--muted);font-size:14px;}
+
+  /* ============ 民俗 ============ */
+  #occasions{background:var(--paper);}
+  .occasions{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .occasion{
+    background:var(--white);border-radius:16px;overflow:hidden;text-align:center;
+    box-shadow:var(--shadow);transition:.35s;border-top:4px solid var(--gold);
+  }
+  .occasion:hover{transform:translateY(-6px);border-top-color:var(--red);}
+  .occasion-img{position:relative;height:150px;overflow:hidden;cursor:zoom-in;background:#f3e9d8;}
+  .occasion-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+  .occasion:hover .occasion-img img{transform:scale(1.06);}
+  .occasion-body{padding:20px 18px 24px;}
+  .occasion-body h3{color:var(--red-deep);font-size:19px;margin-bottom:8px;letter-spacing:1px;}
+  .occasion-body p{color:var(--muted);font-size:14px;}
+
+  /* ============ 传承人 ============ */
+  #inheritors{background:var(--paper-deep);}
+  .inheritors{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .inheritor{background:var(--white);border-radius:16px;padding:36px 28px;box-shadow:var(--shadow);text-align:center;}
+  .inheritor .avatar{
+    width:90px;height:90px;margin:0 auto 18px;border-radius:50%;
+    background:linear-gradient(135deg,var(--red),var(--gold));display:grid;place-items:center;
+    color:#fff;font-size:34px;font-weight:700;box-shadow:0 10px 24px -8px rgba(176,58,46,.5);
+  }
+  .inheritor h3{font-size:20px;color:var(--red-deep);}
+  .inheritor .role{color:var(--gold);font-size:14px;margin:6px 0 12px;letter-spacing:2px;}
+  .inheritor p{color:var(--muted);font-size:14px;text-align:left;}
+
+  /* ============ 互动体验 ============ */
+  #interact{background:var(--paper);}
+  .interact-wrap{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .panel{background:var(--white);border-radius:18px;padding:38px;box-shadow:var(--shadow);}
+  .panel h3{color:var(--red-deep);font-size:22px;letter-spacing:1px;margin-bottom:6px;}
+  .panel .hint{color:var(--muted);font-size:14px;margin-bottom:22px;}
+  .shape-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .shape{
+    border:1.5px solid rgba(200,160,90,.4);border-radius:14px;padding:20px 8px;
+    text-align:center;cursor:pointer;transition:.25s;background:var(--paper);font-family:inherit;
+  }
+  .shape:hover{border-color:var(--red);transform:translateY(-3px);}
+  .shape.active{border-color:var(--red);background:var(--red);color:#fff;box-shadow:0 10px 24px -8px rgba(176,58,46,.55);}
+  .shape .ico{font-size:36px;display:block;margin-bottom:6px;}
+  .shape .nm{font-size:14px;letter-spacing:1px;}
+  .shape-answer{
+    margin-top:22px;padding:18px 20px;border-radius:12px;background:var(--paper-deep);
+    color:var(--ink);font-size:15px;min-height:80px;border-left:4px solid var(--gold);
+  }
+  .shape-answer b{color:var(--red);}
+
+  .steam-demo{text-align:center;}
+  .pot{position:relative;width:220px;height:190px;margin:0 auto 26px;}
+  .pot .lid{width:180px;height:40px;background:linear-gradient(180deg,#caa65a,#a87f3c);border-radius:50% 50% 8px 8px;margin:0 auto;position:relative;z-index:2;box-shadow:0 6px 12px -4px rgba(80,50,20,.5);}
+  .pot .lid::after{content:"";position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:22px;height:22px;background:#8a5a2a;border-radius:50%;}
+  .pot .base{width:210px;height:140px;background:linear-gradient(180deg,#c9a86a,#b08d4a);border-radius:0 0 30px 30px;margin:-4px auto 0;position:relative;box-shadow:inset 0 -18px 30px rgba(80,50,20,.35),0 18px 30px -12px rgba(80,50,20,.5);}
+  .pot .base::before{content:"福";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:var(--red-deep);font-size:40px;font-weight:900;opacity:.85;}
+  .pot .flame{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
+  .pot .flame i{display:block;width:16px;height:34px;background:linear-gradient(180deg,#ff7a3d,#d84a1f);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:burn 1s infinite alternate;}
+  .pot .flame i:nth-child(2){height:24px;animation-delay:-.4s;}
+  .pot .flame i:nth-child(3){height:28px;animation-delay:-.7s;}
+  @keyframes burn{from{transform:scaleY(.8);opacity:.9;}to{transform:scaleY(1.15);opacity:1;}}
+  .pot .pot-steam{position:absolute;top:6px;left:50%;transform:translateX(-50%);width:12px;height:44px;border-radius:50%;background:linear-gradient(180deg,rgba(255,255,255,0),rgba(255,255,255,.9));opacity:0;animation:steam 2.6s infinite;}
+  .pot .pot-steam.p2{animation-delay:-1s;margin-left:20px;}
+  .pot .pot-steam.p3{animation-delay:-1.8s;margin-left:-20px;}
+  @keyframes steam{0%{transform:translate(-50%,20px) scale(.6);opacity:0;}30%{opacity:.9;}100%{transform:translate(-50%,-40px) scale(1.4);opacity:0;}}
+
+  /* 寄语墙 */
+  .wish-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:28px;}
+  .wish-input,.wish-wall-panel{background:var(--white);border-radius:18px;padding:34px;box-shadow:var(--shadow);}
+  .wish-input textarea{
+    width:100%;min-height:140px;border:1.5px solid var(--paper-deep);border-radius:12px;padding:16px;
+    font-family:inherit;font-size:16px;color:var(--ink);resize:vertical;background:var(--paper);
+  }
+  .wish-input textarea:focus{outline:2px solid var(--gold);border-color:transparent;}
+  .wish-input .count{text-align:right;color:var(--muted);font-size:13px;margin:8px 0 16px;}
+  .wish-input .btn{width:100%;}
+  .wish-wall-panel{display:flex;flex-wrap:wrap;gap:14px;align-content:flex-start;}
+  .wish-card{
+    background:var(--paper);border:2px solid var(--gold);border-radius:12px;padding:16px 18px;
+    position:relative;color:var(--ink);font-size:15px;max-width:100%;
+    animation:pop .5s cubic-bezier(.2,.9,.3,1.4) both;
+  }
+  .wish-card::before,.wish-card::after{content:"";position:absolute;width:12px;height:12px;border-color:var(--red);border-style:solid;}
+  .wish-card::before{top:-2px;left:-2px;border-width:2px 0 0 2px;}
+  .wish-card::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0;}
+  @keyframes pop{from{opacity:0;transform:scale(.6) translateY(10px);}to{opacity:1;transform:scale(1);}}
+  .module-note{text-align:center;color:var(--muted);font-size:13px;margin-top:22px;letter-spacing:1px;}
+
+  /* 涂色板 */
+  .color-wrap{display:grid;grid-template-columns:1.6fr 1fr;gap:28px;}
+  .color-canvas-panel,.color-control-panel{background:var(--white);border-radius:18px;padding:30px;box-shadow:var(--shadow);}
+  .bun-switcher{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
+  .bun-switcher button{
+    border:1.5px solid var(--paper-deep);background:var(--paper);border-radius:20px;padding:7px 14px;
+    cursor:pointer;font-family:inherit;font-size:14px;color:var(--ink);transition:.2s;
+  }
+  .bun-switcher button:hover{border-color:var(--red);color:var(--red);}
+  .bun-switcher button.active{background:var(--red);color:#fff;border-color:var(--red);}
+  .bun-svg-wrap{
+    background:var(--paper);border-radius:14px;padding:16px;display:grid;place-items:center;min-height:340px;
+  }
+  .bun-svg-wrap svg{width:100%;max-width:300px;height:auto;cursor:pointer;fill:transparent;stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;}
+  .bun-svg-wrap svg .rz{transition:fill .2s;cursor:pointer;}
+  .panel-label{color:var(--red-deep);font-size:15px;letter-spacing:1px;margin-bottom:14px;font-weight:700;}
+  .palette{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:18px;}
+  .swatch{
+    width:100%;aspect-ratio:1;border-radius:50%;border:3px solid #fff;cursor:pointer;transition:.2s;
+    box-shadow:0 0 0 1.5px rgba(0,0,0,.1);
+  }
+  .swatch:hover{transform:scale(1.06);}
+  .swatch.active{transform:scale(1.08);box-shadow:0 0 0 2.5px var(--red);}
+  .panel-hint{color:var(--muted);font-size:13px;margin-bottom:18px;}
+  .color-actions{display:flex;gap:12px;flex-wrap:wrap;}
+  .color-actions .btn{flex:1;padding:11px 18px;font-size:15px;}
+
+  /* ============ 文创衍生 ============ */
+  #cultural{background:var(--paper-deep);}
+  .cultural-sub{margin-bottom:72px;}
+  .cultural-sub:last-child{margin-bottom:0;}
+  .sub-title{text-align:center;margin-bottom:10px;}
+  .sub-title .ico{font-size:32px;display:block;margin-bottom:4px;}
+  .sub-title h3{font-size:clamp(22px,3vw,30px);color:var(--red-deep);letter-spacing:2px;}
+  .sub-title .sub{color:var(--gold);font-size:15px;margin-top:6px;letter-spacing:1px;}
+  .cultural-sub .intro{max-width:800px;margin:16px auto 32px;text-align:center;color:var(--ink);font-size:15px;line-height:2;}
+  .cc-grid{display:grid;gap:24px;}
+  .cc-grid.g2{grid-template-columns:repeat(2,1fr);}
+  .cc-grid.g3{grid-template-columns:repeat(3,1fr);}
+  .cc-grid.g4{grid-template-columns:repeat(4,1fr);}
+  .cc-item{background:var(--white);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);transition:.35s;}
+  .cc-item:hover{transform:translateY(-6px);box-shadow:0 24px 50px -18px rgba(120,60,30,.4);}
+  .cc-item .cc-img{position:relative;overflow:hidden;cursor:zoom-in;background:#f3e9d8;}
+  .cc-item .cc-img img{width:100%;height:250px;object-fit:cover;transition:transform .5s;}
+  .cc-item:hover .cc-img img{transform:scale(1.06);}
+  .cc-item .cc-cap{padding:20px 22px;}
+  .cc-item .cc-cap h4{color:var(--red-deep);font-size:17px;margin-bottom:8px;letter-spacing:1px;}
+  .cc-item .cc-cap p{color:var(--muted);font-size:13.5px;line-height:1.75;}
+  .cc-badge{position:absolute;top:12px;left:12px;background:var(--red);color:#fff;font-size:12px;padding:3px 11px;border-radius:20px;letter-spacing:1px;}
+  .cc-item .cc-flip-hint{position:absolute;bottom:12px;right:12px;background:rgba(43,27,18,.6);color:#fff;font-size:12px;padding:2px 10px;border-radius:14px;}
+  /* 邮票齿边 */
+  .stamp .cc-img img{height:230px;object-fit:contain;padding:16px;background:#fff;}
+  .stamp .cc-img::after{content:"";position:absolute;inset:10px;border:2px dashed rgba(0,0,0,.14);pointer-events:none;border-radius:4px;}
+  /* 冰箱贴金属珐琅质感 */
+  .magnet .cc-img img{box-shadow:inset 0 0 40px rgba(255,255,255,.35);}
+  /* 纪念币金属哑光质感 */
+  .coin .cc-img img{filter:contrast(1.02) saturate(1.05);}
+  .cultural-note{text-align:center;color:var(--muted);font-size:13px;margin-top:20px;letter-spacing:1px;}
+
+  /* ============ 结语 / 页脚 ============ */
+  #epilogue{background:linear-gradient(180deg,var(--red-deep),#5f1711);color:#f7e6d4;text-align:center;}
+  #epilogue h2{color:var(--gold-light);font-size:clamp(28px,4vw,40px);letter-spacing:6px;}
+  #epilogue .epi-text{max-width:720px;margin:24px auto;color:#efd9c2;font-size:16px;}
+  #epilogue .epi-seal{
+    width:86px;height:86px;margin:34px auto;background:var(--red);color:#fff;border-radius:12px;
+    display:grid;place-items:center;font-size:20px;font-weight:700;letter-spacing:2px;
+    box-shadow:inset 0 0 0 4px rgba(255,255,255,.3);transform:rotate(-4deg);
+  }
+  footer{background:#4a120d;color:#c9a48a;text-align:center;padding:30px 6vw;font-size:13px;letter-spacing:1px;}
+  footer a{color:var(--gold-light);text-decoration:none;}
+
+  .backtop{
+    position:fixed;right:26px;bottom:26px;width:48px;height:48px;border-radius:50%;
+    background:var(--red);color:#fff;border:none;font-size:20px;cursor:pointer;
+    box-shadow:0 10px 24px -8px rgba(176,58,46,.6);opacity:0;visibility:hidden;transition:.3s;z-index:90;
+  }
+  .backtop.show{opacity:1;visibility:visible;}
+
+  /* ============ 图片弹窗 ============ */
+  .lightbox{
+    position:fixed;inset:0;background:rgba(30,15,8,.92);z-index:1000;
+    display:none;align-items:center;justify-content:center;flex-direction:column;padding:40px;
+  }
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:min(88vw,640px);max-height:68vh;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);background:#fff;}
+  .lb-cap{color:#f3e3c2;margin-top:18px;text-align:center;max-width:640px;font-size:15px;line-height:1.7;}
+  .lb-cap b{color:var(--gold-light);font-size:17px;}
+  .lb-btn{
+    position:absolute;background:rgba(255,255,255,.12);color:#fff;border:none;font-size:28px;
+    width:52px;height:52px;border-radius:50%;cursor:pointer;transition:.2s;line-height:1;
+  }
+  .lb-btn:hover{background:rgba(255,255,255,.28);}
+  .lb-close{top:24px;right:30px;}
+  .lb-prev{left:22px;top:50%;transform:translateY(-50%);}
+  .lb-next{right:22px;top:50%;transform:translateY(-50%);}
+  .lb-flip{top:24px;left:30px;font-size:14px;width:auto;padding:12px 20px;border-radius:24px;letter-spacing:1px;}
+
+  /* ============ 响应式 ============ */
+  @media (max-width:960px){
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .intro-cards{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr 1fr;}
+    .patterns{grid-template-columns:1fr 1fr;}
+    .occasions{grid-template-columns:repeat(2,1fr);}
+    .inheritors{grid-template-columns:1fr;}
+    .interact-wrap,.wish-wrap,.color-wrap{grid-template-columns:1fr;}
+    .cc-grid.g4{grid-template-columns:repeat(2,1fr);}
+    .cc-grid.g3{grid-template-columns:repeat(2,1fr);}
+    .cc-grid.g2{grid-template-columns:1fr;}
+    .timeline::before{left:18px;}
+    .tl-item,.tl-item:nth-child(even){left:0;width:100%;padding:0 0 40px 52px;}
+    .tl-item .dot,.tl-item:nth-child(even) .dot{left:9px;right:auto;}
+  }
+  @media (max-width:640px){
+    nav{
+      position:fixed;top:64px;right:16px;flex-direction:column;gap:4px;
+      background:var(--paper);padding:16px;border-radius:14px;box-shadow:var(--shadow);
+      transform:translateY(-20px);opacity:0;pointer-events:none;transition:.3s;
+    }
+    nav.open{transform:none;opacity:1;pointer-events:auto;}
+    .nav-toggle{display:block;}
+    .steps{grid-template-columns:1fr;}
+    .patterns{grid-template-columns:1fr;}
+    .occasions{grid-template-columns:1fr;}
+    .shape-grid{grid-template-columns:repeat(2,1fr);}
+    .cc-grid.g4,.cc-grid.g3,.cc-grid.g2{grid-template-columns:1fr;}
+    section{padding:72px 5vw;}
+    .hero{padding-bottom:300px;}
+    .steam-canvas{bottom:210px;height:260px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- 顶部导航 -->
+<header id="header">
+  <div class="logo">
+    <div class="seal">饽</div>
+    <div class="name">“饽”采众长<small>胶东大饽饽数字非遗展厅</small></div>
+  </div>
+  <button class="nav-toggle" id="navToggle" aria-label="菜单">☰</button>
+  <nav id="nav">
+    <a href="#overview" class="active">序厅</a>
+    <a href="#history">历史</a>
+    <a href="#craft">工艺</a>
+    <a href="#pattern">纹样</a>
+    <a href="#occasions">民俗</a>
+    <a href="#inheritors">传承</a>
+    <a href="#interact">互动</a>
+    <a href="#cultural">文创衍生</a>
+  </nav>
+</header>
+
+<!-- 封面 -->
+<div class="hero" id="top">
+  <div class="clouds">
+    <svg class="cld" viewBox="0 0 100 56" aria-hidden="true"><circle cx="34" cy="34" r="16"/><circle cx="52" cy="26" r="22"/><circle cx="72" cy="36" r="14"/><rect x="30" y="34" width="46" height="18" rx="9"/></svg>
+    <svg class="cld" viewBox="0 0 100 56" aria-hidden="true"><circle cx="34" cy="34" r="16"/><circle cx="52" cy="26" r="22"/><circle cx="72" cy="36" r="14"/><rect x="30" y="34" width="46" height="18" rx="9"/></svg>
+    <svg class="cld" viewBox="0 0 100 56" aria-hidden="true"><circle cx="34" cy="34" r="16"/><circle cx="52" cy="26" r="22"/><circle cx="72" cy="36" r="14"/><rect x="30" y="34" width="46" height="18" rx="9"/></svg>
+    <svg class="cld" viewBox="0 0 100 56" aria-hidden="true"><circle cx="34" cy="34" r="16"/><circle cx="52" cy="26" r="22"/><circle cx="72" cy="36" r="14"/><rect x="30" y="34" width="46" height="18" rx="9"/></svg>
+  </div>
+  <div class="corner-wm" aria-hidden="true">
+    <svg class="wm wm-tl" viewBox="0 0 60 60"><path d="M30 10 C16 18 22 46 30 50 C38 46 44 18 30 10 Z"/><path d="M30 16 C27 30 28 40 30 46"/><path d="M24 22 Q12 16 16 28 Q24 26 24 22 Z"/></svg>
+    <svg class="wm wm-tr" viewBox="0 0 60 60"><circle cx="30" cy="34" r="18"/><path d="M30 16 L22 7 L30 12 L38 7 Z"/><circle cx="23" cy="34" r="3"/><circle cx="37" cy="34" r="3"/><circle cx="30" cy="41" r="3"/></svg>
+    <svg class="wm wm-bl" viewBox="0 0 60 60"><path d="M12 30 C16 16 42 14 48 30 C42 44 16 44 12 30 Z"/><path d="M48 30 L57 20 L53 30 L57 40 Z"/><circle cx="24" cy="28" r="2.5"/><path d="M30 24 Q34 22 36 26"/></svg>
+    <svg class="wm wm-br" viewBox="0 0 60 60"><path d="M16 40 q-8 -12 6 -14 q3 -9 13 -9 q10 0 13 9 q9 2 2 14 q-2 7 -9 5 q-5 7 -13 5 q-7 0 -12 -5"/></svg>
+  </div>
+  <div class="hero-inner">
+    <div class="eyebrow">国家级非物质文化遗产 · 山东胶东</div>
+    <h1>“<span class="big">饽</span>”采众长</h1>
+    <p class="subtitle">一面一世界，一蒸一春秋</p>
+    <p class="verse">发面如雪，巧手塑形；<b>寿桃寄福</b>，<b>石榴兆多</b>；<br>蒸腾的是<b>人间烟火</b>，传承的是胶东<b>千年乡愁</b>。</p>
+    <p class="digital-note">从蒸笼烟火，到数字非遗</p>
+    <div class="cta">
+      <a href="#overview" class="btn btn-primary">进入展厅 ➜</a>
+      <a href="#interact" class="btn btn-ghost">互动体验</a>
+    </div>
+  </div>
+  <canvas id="steamCanvas" class="steam-canvas"></canvas>
+  <div class="mountain-scene">
+    <svg viewBox="0 0 360 300" aria-label="数字枣山饽饽">
+      <defs>
+        <radialGradient id="mt1" cx="38%" cy="28%" r="80%">
+          <stop offset="0%" stop-color="#fffdf8"/>
+          <stop offset="65%" stop-color="#f6e8c9"/>
+          <stop offset="100%" stop-color="#e8cf9e"/>
+        </radialGradient>
+        <radialGradient id="dateG" cx="35%" cy="30%">
+          <stop offset="0%" stop-color="#e0493f"/>
+          <stop offset="100%" stop-color="#a02418"/>
+        </radialGradient>
+        <linearGradient id="plateG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e8cf8a"/>
+          <stop offset="100%" stop-color="#c9a24b"/>
+        </linearGradient>
+      </defs>
+      <path d="M40,120 q-8,-14 8,-14 q2,-10 14,-10 q12,0 14,10 q16,0 16,14 q0,8 -8,10" fill="none" stroke="#e8cf8a" stroke-width="2" opacity=".7"/>
+      <path d="M300,140 q-8,-14 8,-14 q2,-10 14,-10 q12,0 14,10 q16,0 16,14 q0,8 -8,10" fill="none" stroke="#e8cf8a" stroke-width="2" opacity=".7"/>
+      <ellipse cx="180" cy="272" rx="150" ry="26" fill="#d9b878"/>
+      <ellipse cx="180" cy="266" rx="150" ry="24" fill="url(#plateG)"/>
+      <ellipse cx="180" cy="262" rx="132" ry="18" fill="#e8cf8a" opacity=".6"/>
+      <path d="M56,256 Q56,168 180,162 Q304,168 304,256 Q180,278 56,256 Z" fill="url(#mt1)"/>
+      <path d="M92,172 Q92,124 180,120 Q268,124 268,172 Q180,190 92,172 Z" fill="url(#mt1)"/>
+      <path d="M124,128 Q124,96 180,93 Q236,96 236,128 Q180,140 124,128 Z" fill="url(#mt1)"/>
+      <g fill="#e8cf8a">
+        <circle cx="180" cy="62" r="13"/>
+        <circle cx="162" cy="70" r="10"/>
+        <circle cx="198" cy="70" r="10"/>
+        <circle cx="171" cy="48" r="9"/>
+        <circle cx="189" cy="48" r="9"/>
+      </g>
+      <circle cx="180" cy="62" r="6" fill="#c9a24b"/>
+      <g fill="url(#dateG)">
+        <ellipse cx="104" cy="212" rx="11" ry="13"/>
+        <ellipse cx="256" cy="212" rx="11" ry="13"/>
+        <ellipse cx="180" cy="226" rx="11" ry="13"/>
+        <ellipse cx="136" cy="180" rx="9" ry="11"/>
+        <ellipse cx="224" cy="180" rx="9" ry="11"/>
+        <ellipse cx="180" cy="150" rx="9" ry="11"/>
+        <ellipse cx="152" cy="120" rx="7" ry="8"/>
+        <ellipse cx="208" cy="120" rx="7" ry="8"/>
+      </g>
+      <path d="M150,250 q-10,-8 10,-8 q2,-6 10,-6 q8,0 10,6 q12,0 12,8" fill="none" stroke="#e8cf8a" stroke-width="2.5" opacity=".85"/>
+    </svg>
+  </div>
+  <div class="scroll-hint"><span class="arrow"></span><span class="arrow a2"></span><span class="lbl">向下滑动</span></div>
+</div>
+
+<!-- 序厅 -->
+<section id="overview">
+  <div class="section-head reveal">
+    <div class="tag">序 厅 · 概 览</div>
+    <h2>一笼<span class="accent">蒸香</span>，一脉相承</h2>
+    <div class="divider"></div>
+    <p>胶东大饽饽，又称「花饽饽」，是山东胶东半岛流传数百年的民间面塑艺术，将食与艺、俗与礼熔于一炉。</p>
+  </div>
+  <div class="stats">
+    <div class="stat reveal"><div class="num">300<small>+</small></div><div class="label">年传承历史</div></div>
+    <div class="stat reveal"><div class="num">200<small>+</small></div><div class="label">经典造型花样</div></div>
+    <div class="stat reveal"><div class="num">9<small>道</small></div><div class="label">核心制作工序</div></div>
+    <div class="stat reveal"><div class="num">国<small>家级</small></div><div class="label">非物质文化遗产</div></div>
+  </div>
+  <div class="intro-cards">
+    <div class="intro-main reveal">
+      <h3>何为「大饽饽」</h3>
+      <p>胶东半岛素有「<b>无饽饽不成席，无花不成年</b>」之说。以本地优质小麦磨面，经老面发酵、揉面、塑形、点染、蒸制等工序，蒸出的饽饽蓬松洁白、麦香浓郁；再以面塑捏出<b>寿桃、石榴、金鱼、龙凤、花鸟</b>等吉祥造型，成为既可观赏、又可食用的民间艺术品。</p>
+      <p>它不仅是年节餐桌上的主食，更承载着胶东人<b>敬天法祖、祈福纳祥</b>的朴素信仰，是流动在面粉里的文化记忆。</p>
+    </div>
+    <div class="intro-side reveal">
+      <h3>一饽一礼 · 百态民俗</h3>
+      <li>春节蒸「枣饽饽」，寓意早发大财</li>
+      <li>新婚蒸「龙凤饽饽」，寓意龙凤呈祥</li>
+      <li>寿辰蒸「寿桃饽饽」，寓意福寿绵长</li>
+      <li>满月蒸「百岁饽饽」，寓意长命百岁</li>
+      <li>上梁蒸「圣虫饽饽」，寓意五谷丰登</li>
+    </div>
+  </div>
+</section>
+
+<!-- 历史 -->
+<section id="history">
+  <div class="section-head reveal">
+    <div class="tag">历史 · 源流</div>
+    <h2>一脉<span class="accent">面香</span>越百年</h2>
+    <div class="divider"></div>
+    <p>从祭灶敬神的麦香，到餐桌上的花馍，胶东大饽饽走过了漫长的岁月。</p>
+  </div>
+  <div class="timeline">
+    <div class="tl-item reveal"><span class="dot"></span>
+      <div class="tl-card"><div class="year">明清时期</div><h4>民间面塑兴起</h4><p>胶东小麦种植兴盛，逢年过节以面塑祭祖敬神，「花饽饽」雏形初现。</p></div>
+    </div>
+    <div class="tl-item reveal"><span class="dot"></span>
+      <div class="tl-card"><div class="year">清末民初</div><h4>造型技艺成熟</h4><p>寿桃、石榴、圣虫等经典造型定型，染色与捏塑技艺日益精湛，成为婚丧寿诞必备。</p></div>
+    </div>
+    <div class="tl-item reveal"><span class="dot"></span>
+      <div class="tl-card"><div class="year">20 世纪中叶</div><h4>口传心授延续</h4><p>老艺人以「面点师带徒」方式代代相传，形成烟台、威海、青岛等地的独特流派。</p></div>
+    </div>
+    <div class="tl-item reveal"><span class="dot"></span>
+      <div class="tl-card"><div class="year">21 世纪初</div><h4>入选非遗名录</h4><p>胶东花饽饽先后列入省、市级非遗，并跻身国家级非物质文化遗产代表性项目。</p></div>
+    </div>
+    <div class="tl-item reveal"><span class="dot"></span>
+      <div class="tl-card"><div class="year">今日</div><h4>老手艺·新表达</h4><p>借助电商与短视频，「花饽饽」从农家灶台走向全国，成为胶东文旅的一张金色名片。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 工艺 -->
+<section id="craft">
+  <div class="section-head reveal">
+    <div class="tag">工艺 · 匠心</div>
+    <h2>九道工序，<span class="accent">指尖生花</span></h2>
+    <div class="divider"></div>
+    <p>看似朴素的饽饽，背后是面、水、火与一双巧手的默契。</p>
+  </div>
+  <div class="steps">
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/xuanmian.png" data-title="选面 · 选好麦" data-desc="精选胶东冬小麦，麦香根基"><img src="craft/xuanmian.png" alt="选面" loading="lazy"><span class="no">01</span><span class="icon">🌾</span></div>
+      <div class="step-body"><h3>选面<em>选好麦</em></h3><p>精选胶东冬小麦，麦香根基</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/huomian.png" data-title="和面 · 老面发" data-desc="老面引子发酵，柔软不粘手"><img src="craft/huomian.png" alt="和面" loading="lazy"><span class="no">02</span><span class="icon">💧</span></div>
+      <div class="step-body"><h3>和面<em>老面发</em></h3><p>老面引子发酵，柔软不粘手</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/roumian.png" data-title="揉面 · 劲道足" data-desc="反复揉压排气，洁白有层次"><img src="craft/roumian.png" alt="揉面" loading="lazy"><span class="no">03</span><span class="icon">🤲</span></div>
+      <div class="step-body"><h3>揉面<em>劲道足</em></h3><p>反复揉压排气，洁白有层次</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/suxing.png" data-title="塑形 · 巧手捏" data-desc="剪捏搓压刻，花鸟鱼虫跃然而出"><img src="craft/suxing.png" alt="塑形" loading="lazy"><span class="no">04</span><span class="icon">✂️</span></div>
+      <div class="step-body"><h3>塑形<em>巧手捏</em></h3><p>剪捏搓压刻，花鸟鱼虫跃然而出</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/dianran.png" data-title="点染 · 天然色" data-desc="红曲菠菜南瓜天然上色"><img src="craft/dianran.png" alt="点染" loading="lazy"><span class="no">05</span><span class="icon">🎨</span></div>
+      <div class="step-body"><h3>点染<em>天然色</em></h3><p>红曲菠菜南瓜天然上色</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/dianzhui.png" data-title="点缀 · 嵌红枣" data-desc="嵌去核大枣，谐音「早」发大财"><img src="craft/dianzhui.png" alt="点缀" loading="lazy"><span class="no">06</span><span class="icon">🫘</span></div>
+      <div class="step-body"><h3>点缀<em>嵌红枣</em></h3><p>嵌去核大枣，谐音「早」发大财</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/xingfa.png" data-title="醒发 · 二次发" data-desc="蒸汽中舒展，更蓬松饱满"><img src="craft/xingfa.png" alt="醒发" loading="lazy"><span class="no">07</span><span class="icon">⏳</span></div>
+      <div class="step-body"><h3>醒发<em>二次发</em></h3><p>蒸汽中舒展，更蓬松饱满</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/zhengzhi.png" data-title="蒸制 · 大火蒸" data-desc="旺火足汽，揭锅麦香扑面"><img src="craft/zhengzhi.png" alt="蒸制" loading="lazy"><span class="no">08</span><span class="icon">♨️</span></div>
+      <div class="step-body"><h3>蒸制<em>大火蒸</em></h3><p>旺火足汽，揭锅麦香扑面</p></div>
+    </div>
+    <div class="step reveal">
+      <div class="step-img" data-front="craft/dianjing.png" data-title="点睛 · 描纹样" data-desc="彩面点睛开脸，赋予灵气"><img src="craft/dianjing.png" alt="点睛" loading="lazy"><span class="no">09</span><span class="icon">🖐️</span></div>
+      <div class="step-body"><h3>点睛<em>描纹样</em></h3><p>彩面点睛开脸，赋予灵气</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 纹样 -->
+<section id="pattern">
+  <div class="section-head reveal">
+    <div class="tag">纹样 · 寓意</div>
+    <h2>有图必有意，<span class="accent">有意必吉祥</span></h2>
+    <div class="divider"></div>
+    <p>每一朵面花、每一个造型，都是一句没说出口的祝福。</p>
+  </div>
+  <div class="patterns">
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/shoutao.png" data-title="寿桃 · 福寿绵长" data-desc="为老人祝寿"><img src="buns/shoutao.png" alt="寿桃饽饽" loading="lazy"></div>
+      <div class="info"><h3>寿桃<span class="wish">福寿绵长</span></h3><p>为老人祝寿</p></div>
+    </div>
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/shiliu.png" data-title="石榴 · 多子多福" data-desc="婚嫁添丁"><img src="buns/shiliu.png" alt="石榴饽饽" loading="lazy"></div>
+      <div class="info"><h3>石榴<span class="wish">多子多福</span></h3><p>婚嫁添丁</p></div>
+    </div>
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/jinyu.png" data-title="金鱼 · 年年有余" data-desc="「鱼」谐音「余」"><img src="buns/jinyu.png" alt="金鱼饽饽" loading="lazy"></div>
+      <div class="info"><h3>金鱼<span class="wish">年年有余</span></h3><p>「鱼」谐音「余」</p></div>
+    </div>
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/longfeng.png" data-title="龙凤 · 龙凤呈祥" data-desc="婚宴重头戏"><img src="buns/longfeng.png" alt="龙凤饽饽" loading="lazy"></div>
+      <div class="info"><h3>龙凤<span class="wish">龙凤呈祥</span></h3><p>婚宴重头戏</p></div>
+    </div>
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/mudan.png" data-title="牡丹 · 花开富贵" data-desc="荣华富贵"><img src="buns/mudan.png" alt="牡丹饽饽" loading="lazy"></div>
+      <div class="info"><h3>牡丹<span class="wish">花开富贵</span></h3><p>荣华富贵</p></div>
+    </div>
+    <div class="pattern reveal">
+      <div class="pattern-img" data-front="buns/shengchong.jpg" data-title="圣虫 · 五谷丰登" data-desc="护粮神虫"><img src="buns/shengchong.jpg" alt="圣虫饽饽" loading="lazy"></div>
+      <div class="info"><h3>圣虫<span class="wish">五谷丰登</span></h3><p>护粮神虫</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 民俗 -->
+<section id="occasions">
+  <div class="section-head reveal">
+    <div class="tag">民俗 · 应用</div>
+    <h2>每逢<span class="accent">人生大事</span>，必有饽饽登场</h2>
+    <div class="divider"></div>
+    <p>大饽饽贯穿胶东人一生的重要节点，是一方水土最温暖的人情表达。</p>
+  </div>
+  <div class="occasions">
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/chunjie.jpg" data-title="春节" data-desc="枣饽饽、圣虫、元宝齐上桌，辞旧迎新，祈一年好运。"><img src="folk/chunjie.jpg" alt="春节" loading="lazy"></div>
+      <div class="occasion-body"><h3>春节</h3><p>枣饽饽、圣虫、元宝齐上桌，辞旧迎新，祈一年好运。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/hunjia.jpg" data-title="婚嫁" data-desc="龙凤饽饽、喜饽饽贺新人，寓意百年好合、早生贵子。"><img src="folk/hunjia.jpg" alt="婚嫁" loading="lazy"></div>
+      <div class="occasion-body"><h3>婚嫁</h3><p>龙凤饽饽、喜饽饽贺新人，寓意百年好合、早生贵子。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/shoudan.jpg" data-title="寿诞" data-desc="寿桃饽饽层层堆叠如塔，为长辈贺寿，福如东海。"><img src="folk/shoudan.jpg" alt="寿诞" loading="lazy"></div>
+      <div class="occasion-body"><h3>寿诞</h3><p>寿桃饽饽层层堆叠如塔，为长辈贺寿，福如东海。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/manyue.jpg" data-title="满月" data-desc="百岁饽饽送亲友，祝福新生儿长命百岁、平安喜乐。"><img src="folk/manyue.jpg" alt="满月" loading="lazy"></div>
+      <div class="occasion-body"><h3>满月</h3><p>百岁饽饽送亲友，祝福新生儿长命百岁、平安喜乐。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/shangliang.jpg" data-title="上梁" data-desc="圣虫、花饽饽抛上房梁，讨个彩头，祈家宅兴旺。"><img src="folk/shangliang.jpg" alt="上梁" loading="lazy"></div>
+      <div class="occasion-body"><h3>上梁</h3><p>圣虫、花饽饽抛上房梁，讨个彩头，祈家宅兴旺。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/fengshou.jpg" data-title="丰收" data-desc="谷仓里供上饽饽，感念土地馈赠，庆祝五谷丰登。"><img src="folk/fengshou.jpg" alt="丰收" loading="lazy"></div>
+      <div class="occasion-body"><h3>丰收</h3><p>谷仓里供上饽饽，感念土地馈赠，庆祝五谷丰登。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/jieling.jpg" data-title="节令" data-desc="清明、端午等节气蒸应景花饽饽，食俗里藏着时令。"><img src="folk/jieling.jpg" alt="节令" loading="lazy"></div>
+      <div class="occasion-body"><h3>节令</h3><p>清明、端午等节气蒸应景花饽饽，食俗里藏着时令。</p></div>
+    </div>
+    <div class="occasion reveal">
+      <div class="occasion-img" data-front="folk/kuizeng.jpg" data-title="馈赠" data-desc="饽饽作礼相赠，是胶东人最实在、最贴心的情谊。"><img src="folk/kuizeng.jpg" alt="馈赠" loading="lazy"></div>
+      <div class="occasion-body"><h3>馈赠</h3><p>饽饽作礼相赠，是胶东人最实在、最贴心的情谊。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 传承人 -->
+<section id="inheritors">
+  <div class="section-head reveal">
+    <div class="tag">传承 · 守望</div>
+    <h2>让<span class="accent">老手艺</span>有传人</h2>
+    <div class="divider"></div>
+    <p>非遗的生命力，在于一代代匠人的坚守，也在于年轻一代的接棒。</p>
+  </div>
+  <div class="inheritors">
+    <div class="inheritor reveal"><div class="avatar">匠</div><h3>老面点师</h3><div class="role">非遗传承人</div><p>几十年如一日，把寿桃捏得圆润、把龙凤塑得灵动，指尖的老茧是岁月颁发的勋章。</p></div>
+    <div class="inheritor reveal"><div class="avatar">承</div><h3>青年手艺人</h3><div class="role">新生代传承人</div><p>在传统造型上融入现代审美，让花饽饽登上短视频与电商平台，圈粉无数。</p></div>
+    <div class="inheritor reveal"><div class="avatar">教</div><h3>非遗进校园</h3><div class="role">传承课堂</div><p>把面团带进课堂，让孩子们在揉捏中触摸乡愁，非遗在童心里生根发芽。</p></div>
+  </div>
+</section>
+
+<!-- 互动体验 -->
+<section id="interact">
+  <div class="section-head reveal">
+    <div class="tag">互动 · 体验</div>
+    <h2>亲手「捏」一笼<span class="accent">吉祥饽饽</span></h2>
+    <div class="divider"></div>
+    <p>选一个花型，看看它藏着怎样的祝福；再点上灶火，蒸一锅热气腾腾的饽饽。</p>
+  </div>
+
+  <div class="interact-wrap">
+    <div class="panel reveal">
+      <h3>选花型 · 知寓意</h3>
+      <p class="hint">点击下方花型，解锁它的吉祥话。</p>
+      <div class="shape-grid" id="shapeGrid">
+        <div class="shape active" data-answer="<b>寿桃</b>：献给长者，祝愿<b>福如东海、寿比南山</b>，是孝心最柔软的表达。"><span class="ico">🍑</span><span class="nm">寿桃</span></div>
+        <div class="shape" data-answer="<b>石榴</b>：籽粒饱满，祝愿新人<b>多子多福、人丁兴旺</b>，甜在嘴里、美在心头。"><span class="ico">🍎</span><span class="nm">石榴</span></div>
+        <div class="shape" data-answer="<b>金鱼</b>：谐音「余」，祝愿家家<b>年年有余、富足安康</b>，日子红红火火。"><span class="ico">🐟</span><span class="nm">金鱼</span></div>
+        <div class="shape" data-answer="<b>龙凤</b>：龙飞凤舞，祝愿新人<b>龙凤呈祥、百年好合</b>，一生一世一双人。"><span class="ico">🐉</span><span class="nm">龙凤</span></div>
+        <div class="shape" data-answer="<b>牡丹</b>：花中之王，祝愿生活<b>花开富贵、锦绣前程</b>，美好如花绽放。"><span class="ico">🌸</span><span class="nm">牡丹</span></div>
+        <div class="shape" data-answer="<b>圣虫</b>：护粮神虫，祝愿农家<b>五谷丰登、仓廪充实</b>，风调雨顺好年景。"><span class="ico">🐛</span><span class="nm">圣虫</span></div>
+      </div>
+      <div class="shape-answer" id="shapeAnswer"><b>寿桃</b>：献给长者，祝愿<b>福如东海、寿比南山</b>，是孝心最柔软的表达。</div>
+    </div>
+    <div class="panel steam-demo reveal">
+      <h3>点灶火 · 蒸饽饽</h3>
+      <p class="hint">按下按钮，灶火燃起，一笼饽饽就出锅啦。</p>
+      <div class="pot">
+        <div class="lid"></div>
+        <div class="base"></div>
+        <div class="flame"><i></i><i></i><i></i></div>
+        <span class="pot-steam p1"></span><span class="pot-steam p2"></span><span class="pot-steam p3"></span>
+      </div>
+      <button class="btn btn-primary start" id="steamBtn">生火蒸制 🔥</button>
+      <p class="hint" id="steamTip" style="margin-top:16px;">灶膛已备好柴火，等你来点火。</p>
+    </div>
+  </div>
+
+  <!-- 寄语墙 -->
+  <div class="module-head reveal">
+    <div class="mtag">互 动 体 验 · 二</div>
+    <h3>饽上寻福 · 祈福寄语墙</h3>
+    <p>写下一句心愿，让花饽饽承载你的美好祈愿</p>
+    <div class="divider"></div>
+  </div>
+  <div class="wish-wrap">
+    <div class="wish-input reveal">
+      <h3>写下寄语</h3>
+      <p class="hint">把心里最真的祝福，写进这面墙。</p>
+      <textarea id="wishText" maxlength="60" placeholder="写下你的新年祈福与美好祝愿……"></textarea>
+      <div class="count" id="wishCount">0 / 60</div>
+      <button class="btn btn-primary" id="wishSubmit">提交寄语</button>
+    </div>
+    <div class="wish-wall-panel reveal" id="wishWall"></div>
+  </div>
+  <p class="module-note">本寄语墙为前端模拟交互，无后端服务器，页面刷新后留言将会清空，仅作为数字展厅演示效果。</p>
+
+  <!-- 涂色板 -->
+  <div class="module-head reveal">
+    <div class="mtag">互 动 体 验 · 三</div>
+    <h3>饽绘五色 · 虚拟涂色板</h3>
+    <p>手执色彩，亲手装点花饽饽</p>
+    <div class="divider"></div>
+  </div>
+  <div class="color-wrap">
+    <div class="color-canvas-panel reveal">
+      <div class="bun-switcher" id="bunSwitcher">
+        <button class="active" data-bun="枣山饽饽">枣山饽饽</button>
+        <button data-bun="石榴饽饽">石榴饽饽</button>
+        <button data-bun="鱼形饽饽">鱼形饽饽</button>
+        <button data-bun="寿桃饽饽">寿桃饽饽</button>
+        <button data-bun="虎兔双饽饽">虎兔双饽饽</button>
+        <button data-bun="云纹山形饽饽">云纹山形饽饽</button>
+      </div>
+      <div class="bun-svg-wrap" id="bunSvgWrap"></div>
+    </div>
+    <div class="color-control-panel reveal">
+      <p class="panel-label">色彩面板</p>
+      <div class="palette" id="palette">
+        <button class="swatch active" data-color="#b03a2e" style="background:#b03a2e" title="中国红"></button>
+        <button class="swatch" data-color="#c9a24b" style="background:#c9a24b" title="金"></button>
+        <button class="swatch" data-color="#e8cf8a" style="background:#e8cf8a" title="浅金"></button>
+        <button class="swatch" data-color="#f8f2e7" style="background:#f8f2e7" title="宣纸"></button>
+        <button class="swatch" data-color="#7a6855" style="background:#7a6855" title="赭石"></button>
+        <button class="swatch" data-color="#2b1b12" style="background:#2b1b12" title="墨棕"></button>
+      </div>
+      <p class="panel-hint">点击色块选色，再点击右侧线稿的任意区域即可上色。</p>
+      <div class="color-actions">
+        <button class="btn btn-primary" id="fillBtn">填充</button>
+        <button class="btn btn-ghost" id="resetBtn">重置本张</button>
+      </div>
+    </div>
+  </div>
+  <p class="module-note">本涂色板为前端演示交互，上色效果仅在浏览器临时展示，刷新页面将会清空。</p>
+</section>
+
+<!-- 文创衍生 -->
+<section id="cultural">
+  <div class="section-head reveal">
+    <div class="tag">文 创 衍 生 · 别开生「面」</div>
+    <h2>把饽饽文化，化作<span class="accent">可触摸</span>的数字非遗</h2>
+    <div class="divider"></div>
+    <p class="intro" style="max-width:820px;margin-top:18px;color:var(--ink);text-align:center;line-height:2;">胶东花饽饽承载着胶东世代的祈福习俗。本系列以传统面艺的捏褶、花边、红枣嵌饰、民俗纹样为原型，借助数字化手段进行转译再创作，衍生出明信片、邮票、珐琅冰箱贴、金属纪念币系列文创。将蒸笼里的人间烟火，转化为可以收藏、携带、把玩的现代器物，探索非遗面向当代的全新表达。</p>
+  </div>
+
+  <!-- 明信片 -->
+  <div class="cultural-sub reveal">
+    <div class="sub-title">
+      <span class="ico">📮</span>
+      <h3>明信片系列｜「饽」采众长</h3>
+      <div class="sub">一纸方寸，把蒸笼里的祈福烟火，寄向远方</div>
+    </div>
+    <p class="intro">本套共六张民俗纪念明信片，选取胶东花饽饽里最具代表性的六款造型——枣山、寿桃、石榴、面鱼、虎兔、云纹山形饽饽。在保留手工捏褶、压花等面艺特征的基础上，将海草房、海浪、远山、祥云等胶东地域意象融入画面；背面保留标准明信片书写格式，可真实邮寄。</p>
+    <div class="cc-grid g3">
+      <figure class="cc-item" data-front="postcard/yingchunnafu-1.png" data-back="postcard/yingchunnafu-2.png" data-title="① 迎春纳福｜枣山饽饽" data-desc="枣山饽饽是胶东春节最具代表性的年俗面点。层层叠起的面坯嵌满红枣，寓意步步高升、迎春纳祥。背景以落雪海草房烘托年意，把腊月蒸枣山、阖家迎新年的胶东年俗定格在纸面。">
+        <div class="cc-img"><img src="postcard/yingchunnafu-1.png" alt="迎春纳福 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>① 迎春纳福｜枣山饽饽</h4><p>枣山饽饽是胶东春节最具代表性的年俗面点，层层叠起的面坯嵌满红枣，寓意步步高升、迎春纳祥。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="postcard/suisuipingan-1.png" data-back="postcard/suisuipingan-2.png" data-title="② 岁岁平安｜寿桃饽饽" data-desc="寿桃饽饽多用于祝寿祈福，饱满圆润的桃形、精心捏制的花边，寄托着福寿绵长的美好祝愿。以淡墨远山衬底，柔雅配色弱化厚重感，传递平安康健、岁岁无忧的朴素期许。">
+        <div class="cc-img"><img src="postcard/suisuipingan-1.png" alt="岁岁平安 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>② 岁岁平安｜寿桃饽饽</h4><p>寿桃饽饽多用于祝寿祈福，饱满圆润的桃形与精心捏制的花边，寄托福寿绵长的美好祝愿。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="postcard/fuximantang-1.png" data-back="postcard/fuximantang-2.png" data-title="③ 福喜满堂｜石榴饽饽" data-desc="石榴饽饽常用于婚嫁、喜宴，面点表面模仿石榴籽粒的压花纹样，取「多子多福、阖家美满」之意。背景融入胶东海浪礁石，把沿海大地的喜气盛进一枚面果之中。">
+        <div class="cc-img"><img src="postcard/fuximantang-1.png" alt="福喜满堂 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>③ 福喜满堂｜石榴饽饽</h4><p>石榴饽饽常用于婚嫁、喜宴，模仿石榴籽粒的压花纹样，取「多子多福、阖家美满」之意。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="postcard/hainajixiang-1.png" data-back="postcard/hainajixiang-2.png" data-title="④ 海纳吉祥｜鱼形饽饽" data-desc="面鱼饽饽是胶东海洋文化的生动缩影。手工捏出的鱼鳞褶纹、波浪形尾鳍，保留面食独有的温润质感；蓝调海浪背景呼应滨海地域特征，谐音「余」，寓意年年有余、海纳吉祥。">
+        <div class="cc-img"><img src="postcard/hainajixiang-1.png" alt="海纳吉祥 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>④ 海纳吉祥｜鱼形饽饽</h4><p>面鱼饽饽是胶东海洋文化的生动缩影，手工捏出的鱼鳞褶纹与波浪尾鳍，寓意年年有余。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="postcard/zhiquankang-1.png" data-back="postcard/zhiquankang-2.png" data-title="⑤ 稚趣安康｜虎兔双饽饽" data-desc="生肖造型饽饽多用于孩子满月、生辰祝福。老虎寓意强健勇敢，兔子寓意灵动可爱；以柔和水彩粉云、小花点缀，跳出传统严肃祈福风格，饱含对孩童平安长大、天真烂漫的祝愿。">
+        <div class="cc-img"><img src="postcard/zhiquankang-1.png" alt="稚趣安康 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>⑤ 稚趣安康｜虎兔双饽饽</h4><p>生肖造型饽饽多用于孩子满月、生辰祝福，老虎寓意强健勇敢，兔子寓意灵动可爱。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="postcard/biekaishengmian-1.png" data-back="postcard/biekaishengmian-2.png" data-title="⑥ 别开生「面」｜云纹山形饽饽" data-desc="本张为创新设计款。将山形轮廓与传统云纹捏褶相结合，点缀细碎数字粒子纹样，把传统面艺纹样进行数字化转译，点题项目内核——别开生「面」，传统非遗，数字新生，象征古老民俗在数字时代焕发全新生命力。">
+        <div class="cc-img"><img src="postcard/biekaishengmian-1.png" alt="别开生面 明信片" loading="lazy"><span class="cc-badge">明信片</span><span class="cc-flip-hint">点击预览 · 可翻面</span></div>
+        <figcaption class="cc-cap"><h4>⑥ 别开生「面」｜云纹山形饽饽</h4><p>创新设计款，将山形轮廓与传统云纹捏褶结合，点缀数字粒子纹样，象征传统非遗数字新生。</p></figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <!-- 邮票 -->
+  <div class="cultural-sub reveal">
+    <div class="sub-title">
+      <span class="ico">📮</span>
+      <h3>福味邮笺 · 胶东花饽饽数字邮票系列</h3>
+      <div class="sub">一枚邮票，一个祝福；一笼饽饽，一段乡愁</div>
+    </div>
+    <div class="cc-grid g4 stamp">
+      <figure class="cc-item" data-front="stamp/liannianyouyu.png" data-title="① 连年有余" data-desc="鱼形花饽饽，以面为身、红枣作鳞。「鱼」谐音「余」，是胶东人刻在年俗里的祈愿：岁岁丰盈，年年有余。白面的温润、红枣的殷红，把朴素滚烫的祝福，蒸进烟火人间。">
+        <div class="cc-img"><img src="stamp/liannianyouyu.png" alt="连年有余 邮票" loading="lazy"><span class="cc-badge">数字邮票</span></div>
+        <figcaption class="cc-cap"><h4>① 连年有余</h4><p>鱼形花饽饽，以面为身、红枣作鳞，「鱼」谐音「余」，岁岁丰盈，年年有余。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="stamp/fushouankang.png" data-title="② 福寿安康" data-desc="层叠寿桃饽饽，是胶东献给长辈的礼。一圈红枣，点点花饰，把「寿比南山」揉进面团。没有华丽辞藻，只有热气腾腾的惦念：愿家人平安康健，岁岁福寿绵长。">
+        <div class="cc-img"><img src="stamp/fushouankang.png" alt="福寿安康 邮票" loading="lazy"><span class="cc-badge">数字邮票</span></div>
+        <figcaption class="cc-cap"><h4>② 福寿安康</h4><p>层叠寿桃饽饽，是胶东献给长辈的礼，一圈红枣点点花饰，愿岁岁福寿绵长。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="stamp/liukaibaizi.png" data-title="③ 榴开百子" data-desc="石榴造型花饽饽，饱满绽开，颗颗红枣如石榴籽。取自「榴开百子」的吉祥寓意，寄托着对阖家兴旺、多福多喜的美好期许。一方面食，盛满对烟火家庭最温柔的祝愿。">
+        <div class="cc-img"><img src="stamp/liukaibaizi.png" alt="榴开百子 邮票" loading="lazy"><span class="cc-badge">数字邮票</span></div>
+        <figcaption class="cc-cap"><h4>③ 榴开百子</h4><p>石榴造型花饽饽饱满绽开，颗颗红枣如石榴籽，寄托阖家兴旺、多福多喜。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="stamp/zhaocaijinbao.png" data-title="④ 招财进宝" data-desc="元宝花饽饽，金纹环绕，层叠向上。不是对暴富的渴求，而是齐鲁大地上最朴实的心愿：勤劳所得，衣食丰足，日子红火，步步向好。把对美好生活的向往，蒸进一笼暖意。">
+        <div class="cc-img"><img src="stamp/zhaocaijinbao.png" alt="招财进宝 邮票" loading="lazy"><span class="cc-badge">数字邮票</span></div>
+        <figcaption class="cc-cap"><h4>④ 招财进宝</h4><p>元宝花饽饽金纹环绕、层叠向上，寄托勤劳所得、衣食丰足、日子红火的心愿。</p></figcaption>
+      </figure>
+    </div>
+    <p class="cultural-note">本系列邮票文创为 AI 辅助设计的数字文创作品，非官方发行邮票，仅为非遗文化创意表达。</p>
+  </div>
+
+  <!-- 冰箱贴 -->
+  <div class="cultural-sub reveal">
+    <div class="sub-title">
+      <span class="ico">🧊</span>
+      <h3>风物磁忆 · 胶东花饽饽数字冰箱贴</h3>
+      <div class="sub">把胶东的烟火年俗，轻轻贴进日常时光里</div>
+    </div>
+    <div class="cc-grid g2 magnet">
+      <figure class="cc-item" data-front="magnet/fujubaban.png" data-title="① 福聚八瓣 · 面纳万象" data-desc="一枚八瓣花形磁贴，如团圆圆桌。中心是胶东人围坐一起揉面做饽饽的温情瞬间，外围八格盛放着寿桃、石榴、福鱼、生肖饽饽等经典造型。一面面团，万般心意。将山海之间的祈愿、四季的祝福，尽数收拢，八瓣向心，福聚满堂。">
+        <div class="cc-img"><img src="magnet/fujubaban.png" alt="福聚八瓣 冰箱贴" loading="lazy"><span class="cc-badge">珐琅冰箱贴</span></div>
+        <figcaption class="cc-cap"><h4>① 福聚八瓣 · 面纳万象</h4><p>一枚八瓣花形磁贴，如团圆圆桌，八格盛放经典造型，八瓣向心，福聚满堂。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="magnet/jiaodongbosu.png" data-title="② 胶东饽俗 · 岁岁有福" data-desc="长幅磁贴徐徐铺开一幅胶东年俗画卷：窗前草屋，海浪轻扬，妇人揉面，花饽饽层层堆叠。红枣点福，祥云漫卷，雪花轻落。蒸的不只是面食，是代代相传的年俗记忆。愿岁岁烟火温热，年年有福如常。">
+        <div class="cc-img"><img src="magnet/jiaodongbosu.png" alt="胶东饽俗 冰箱贴" loading="lazy"><span class="cc-badge">珐琅冰箱贴</span></div>
+        <figcaption class="cc-cap"><h4>② 胶东饽俗 · 岁岁有福</h4><p>长幅磁贴铺开胶东年俗画卷，红枣点福、祥云漫卷，愿岁岁烟火温热、年年有福如常。</p></figcaption>
+      </figure>
+    </div>
+    <p class="cultural-note">本系列为 AI 辅助设计的数字文创作品，仅用于非遗文化创意表达，并非实物商品。</p>
+  </div>
+
+  <!-- 纪念币 -->
+  <div class="cultural-sub reveal">
+    <div class="sub-title">
+      <span class="ico">🪙</span>
+      <h3>金纹寄福 · 花饽饽数字纪念币系列</h3>
+      <div class="sub">以币为载体，刻下面团里代代不息的山海祝福</div>
+    </div>
+    <div class="cc-grid g3 coin">
+      <figure class="cc-item" data-front="coin/cengzaonaxiang.png" data-title="① 层枣纳祥" data-desc="层层叠起的枣山饽饽，是胶东年俗里稳稳的祝福。红枣点点，面花环簇；祥云漫卷，海浪托底。把岁月安稳、家宅吉祥，一叠又一叠，「蒸」进时光，刻于金纹。">
+        <div class="cc-img"><img src="coin/cengzaonaxiang.png" alt="层枣纳祥 纪念币" loading="lazy"><span class="cc-badge">数字纪念币</span></div>
+        <figcaption class="cc-cap"><h4>① 层枣纳祥</h4><p>层层叠起的枣山饽饽，红枣点点、面花环簇，把岁月安稳、家宅吉祥刻于金纹。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="coin/haipanyuqing.png" data-title="② 海畔余庆" data-desc="红鲤跃浪，海贝藏趣，取自胶东靠海而生的烟火浪漫。鱼形花饽饽化作币面主角，海浪翻涌，福气绵长。山海馈予丰收，岁岁皆有余庆，是属于齐鲁海岸独有的吉祥。">
+        <div class="cc-img"><img src="coin/haipanyuqing.png" alt="海畔余庆 纪念币" loading="lazy"><span class="cc-badge">数字纪念币</span></div>
+        <figcaption class="cc-cap"><h4>② 海畔余庆</h4><p>红鲤跃浪、海贝藏趣，鱼形花饽饽化作币面主角，山海馈予丰收、岁岁余庆。</p></figcaption>
+      </figure>
+      <figure class="cc-item" data-front="coin/yunqixinzhang.png" data-title="③ 云启新章" data-desc="如意云纹造型的花饽饽，舒展如祥云漫开。灯笼、雪花、海浪环绕四周，揉面的纹路清晰可见。旧岁圆满，云启新章；愿每一个崭新日子，都热气腾腾，如意安康。">
+        <div class="cc-img"><img src="coin/yunqixinzhang.png" alt="云启新章 纪念币" loading="lazy"><span class="cc-badge">数字纪念币</span></div>
+        <figcaption class="cc-cap"><h4>③ 云启新章</h4><p>如意云纹造型的花饽饽舒展如祥云漫开，旧岁圆满、云启新章，日子热气腾腾。</p></figcaption>
+      </figure>
+    </div>
+    <p class="cultural-note">本系列为 AI 辅助设计的数字文创作品，仅用于非遗文化创意表达，非官方发行货币或法定纪念币。</p>
+  </div>
+</section>
+
+<!-- 结语 -->
+<section id="epilogue">
+  <h2 class="reveal">蒸蒸日上 · 代代相传</h2>
+  <p class="epi-text reveal">一笼大饽饽，是麦田的馈赠、巧手的造化，也是胶东人刻在骨子里的乡愁。<br>愿这口麦香，能穿过时光，让更多人看见、记住、爱上这门老手艺。</p>
+  <div class="epi-seal reveal">非遗<br>永续</div>
+</section>
+
+<footer>
+  胶东大饽饽 · 数字非遗展厅 —— 谨以此页致敬每一位守护民间手艺的传承人。<br>
+  页面仅供非遗文化宣传展示 · 作者：张芸嘉 · <a href="#top">返回顶部</a>
+</footer>
+
+<button class="backtop" id="backtop" aria-label="返回顶部">↑</button>
+
+<!-- 图片预览弹窗 -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="关闭">×</button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="上一张">‹</button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="下一张">›</button>
+  <button class="lb-btn lb-flip" id="lbFlip" style="display:none;">翻看反面</button>
+  <img id="lbImg" src="" alt="文创作品预览">
+  <div class="lb-cap" id="lbCaption"></div>
+</div>
+
+<script>
+  // ===== 导航滚动高亮 + 背景 =====
+  const header = document.getElementById('header');
+  const navLinks = document.querySelectorAll('nav a');
+  const sections = [...navLinks].map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll(){
+    header.classList.toggle('scrolled', window.scrollY > 40);
+    const pos = window.scrollY + 140;
+    let idx = sections.length - 1;
+    sections.forEach((sec, i) => { if (sec && sec.offsetTop <= pos) idx = i; });
+    navLinks.forEach((a, i) => a.classList.toggle('active', i === idx));
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+
+  // ===== 移动端菜单 =====
+  const navToggle = document.getElementById('navToggle');
+  const nav = document.getElementById('nav');
+  navToggle.addEventListener('click', () => nav.classList.toggle('open'));
+  navLinks.forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+
+  // ===== 滚动显现 =====
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // ===== 返回顶部 =====
+  const backtop = document.getElementById('backtop');
+  window.addEventListener('scroll', () => backtop.classList.toggle('show', window.scrollY > 600));
+  backtop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // ===== 互动：选花型 =====
+  const shapes = document.querySelectorAll('.shape');
+  const shapeAnswer = document.getElementById('shapeAnswer');
+  shapes.forEach(s => s.addEventListener('click', () => {
+    shapes.forEach(x => x.classList.remove('active'));
+    s.classList.add('active');
+    shapeAnswer.innerHTML = s.dataset.answer;
+  }));
+
+  // ===== 互动：蒸饽饽 =====
+  const steamBtn = document.getElementById('steamBtn');
+  const steamTip = document.getElementById('steamTip');
+  const potSteams = document.querySelectorAll('.pot-steam');
+  let cooking = false;
+  steamBtn.addEventListener('click', () => {
+    if (cooking) return;
+    cooking = true;
+    steamBtn.textContent = '蒸制中…';
+    steamBtn.disabled = true;
+    steamTip.textContent = '灶火正旺，热气腾腾，耐心等待 ~';
+    potSteams.forEach(p => p.style.opacity = '1');
+    setTimeout(() => {
+      potSteams.forEach(p => p.style.opacity = '0');
+      steamBtn.textContent = '出锅啦！再蒸一笼 🥟';
+      steamBtn.disabled = false;
+      steamTip.innerHTML = '<b style="color:#8a2620;">出锅咯！</b> 麦香四溢，饽饽笑得像朵花，快去给家人尝尝吧。';
+      cooking = false;
+    }, 3200);
+  });
+
+  // ===== 寄语墙 =====
+  const wishWall = document.getElementById('wishWall');
+  const wishText = document.getElementById('wishText');
+  const wishCount = document.getElementById('wishCount');
+  const wishSubmit = document.getElementById('wishSubmit');
+  const presets = ['愿家人岁岁平安，烟火常伴','盼日子蒸蒸日上，万事顺遂','非遗手艺生生不息，代代相传','山海皆安，福满胶东'];
+  function addWish(text){
+    const div = document.createElement('div');
+    div.className = 'wish-card';
+    div.textContent = text;
+    wishWall.appendChild(div);
+  }
+  presets.forEach(addWish);
+  wishText.addEventListener('input', () => { wishCount.textContent = wishText.value.length + ' / 60'; });
+  wishSubmit.addEventListener('click', () => {
+    const t = wishText.value.trim();
+    if (!t) { alert('请先写下你的寄语哦'); return; }
+    addWish(t);
+    wishText.value = '';
+    wishCount.textContent = '0 / 60';
+  });
+
+  // ===== 涂色板 =====
+  const BUNS = {
+    '枣山饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M52,192 Q52,150 120,148 Q188,150 188,192 Q120,208 52,192 Z"/><path class="rz" d="M80,158 Q80,122 120,120 Q160,122 160,158 Q120,170 80,158 Z"/><path class="rz" d="M98,128 Q98,104 120,102 Q142,104 142,128 Q120,138 98,128 Z"/><path class="rz" d="M120,58 Q104,70 106,84 Q120,92 120,76 Z"/><path class="rz" d="M120,58 Q136,70 134,84 Q120,92 120,76 Z"/><path class="rz" d="M106,58 Q96,72 104,82 Q120,88 120,72 Z"/><path class="rz" d="M134,58 Q144,72 136,82 Q120,88 120,72 Z"/><path class="rz" d="M120,44 Q112,52 114,60 Q120,64 120,54 Z"/><path class="rz" d="M120,44 Q128,52 126,60 Q120,64 120,54 Z"/><circle class="rz" cx="120" cy="78" r="6"/><circle class="rz" cx="76" cy="168" r="7"/><circle class="rz" cx="164" cy="168" r="7"/><circle class="rz" cx="120" cy="176" r="7"/><circle class="rz" cx="96" cy="150" r="5"/><circle class="rz" cx="144" cy="150" r="5"/><circle class="rz" cx="108" cy="122" r="4"/><circle class="rz" cx="132" cy="122" r="4"/><circle class="rz" cx="88" cy="132" r="4"/><circle class="rz" cx="152" cy="132" r="4"/><path d="M70,180 Q88,186 106,180"/><path d="M134,180 Q152,186 170,180"/><path d="M94,152 Q108,156 122,152"/><path d="M118,152 Q132,156 146,152"/></svg>`,
+    '石榴饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M88,84 Q88,150 120,152 Q152,150 152,84 Q120,72 88,84 Z"/><path class="rz" d="M104,82 L96,66 L104,72 L112,58 L120,72 L128,62 L126,82 Z"/><path class="rz" d="M96,70 Q88,60 90,52 Q98,56 100,66 Z"/><path class="rz" d="M144,70 Q152,60 150,52 Q142,56 140,66 Z"/><circle class="rz" cx="106" cy="108" r="7"/><circle class="rz" cx="134" cy="108" r="7"/><circle class="rz" cx="120" cy="122" r="7"/><circle class="rz" cx="106" cy="130" r="5"/><circle class="rz" cx="134" cy="128" r="5"/><circle class="rz" cx="120" cy="138" r="5"/><circle class="rz" cx="98" cy="118" r="4"/><circle class="rz" cx="142" cy="118" r="4"/><path d="M96,96 Q120,108 144,96"/><path d="M96,120 Q120,132 144,120"/></svg>`,
+    '鱼形饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M70,120 Q70,82 122,82 Q164,82 172,120 Q164,154 122,156 Q70,154 70,120 Z"/><path class="rz" d="M172,120 L208,88 L200,120 L208,152 Z"/><path class="rz" d="M104,86 Q122,58 142,82 Z"/><path class="rz" d="M120,154 Q128,168 138,158 Z"/><circle class="rz" cx="98" cy="112" r="7"/><circle class="rz" cx="98" cy="112" r="2.5"/><path class="rz" d="M126,96 Q146,88 148,102 Q128,102 126,96 Z"/><path class="rz" d="M124,116 Q146,110 150,124 Q128,124 124,116 Z"/><path class="rz" d="M122,136 Q144,132 146,144 Q124,144 122,136 Z"/><path d="M84,100 Q96,96 100,104"/><path d="M86,124 Q98,122 102,128"/></svg>`,
+    '寿桃饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M120,62 Q64,90 92,142 Q120,172 148,142 Q176,90 120,62 Z"/><path class="rz" d="M90,104 Q48,94 58,120 Q68,146 98,138 Z"/><path class="rz" d="M150,104 Q192,94 182,120 Q172,146 142,138 Z"/><path class="rz" d="M120,58 Q116,50 110,46 Q120,50 126,46 Q124,50 120,58 Z"/><circle class="rz" cx="108" cy="104" r="4"/><circle class="rz" cx="132" cy="104" r="4"/><circle class="rz" cx="120" cy="120" r="4"/><path d="M120,70 Q110,116 120,158"/><path d="M104,116 Q120,126 136,116"/></svg>`,
+    '虎兔双饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M52,120 Q52,72 92,70 Q132,72 132,120 Q132,160 92,162 Q52,160 52,120 Z"/><path class="rz" d="M66,80 Q62,52 52,50 Q68,58 76,78 Z"/><path class="rz" d="M118,80 Q122,52 132,50 Q116,58 108,78 Z"/><path class="rz" d="M70,72 Q66,58 60,56 Q66,62 70,70 Z"/><path class="rz" d="M114,72 Q118,58 124,56 Q118,62 114,70 Z"/><circle class="rz" cx="80" cy="110" r="6"/><circle class="rz" cx="104" cy="110" r="6"/><path class="rz" d="M86,122 Q92,128 98,122 Z"/><path d="M84,102 L92,102 M88,99 L88,111 M96,102 L100,102"/><path d="M74,134 Q80,140 86,136 M92,140 Q98,134 104,136 M84,128 L88,126 M96,126 L100,128"/><path class="rz" d="M148,128 Q148,82 186,80 Q224,82 224,128 Q224,168 186,170 Q148,168 148,128 Z"/><path class="rz" d="M162,88 Q152,48 162,42 Q176,54 180,86 Z"/><path class="rz" d="M210,88 Q220,48 210,42 Q196,54 192,86 Z"/><path class="rz" d="M166,76 Q160,58 158,56 Q164,62 168,74 Z"/><path class="rz" d="M206,76 Q212,58 214,56 Q208,62 204,74 Z"/><circle class="rz" cx="174" cy="122" r="6"/><circle class="rz" cx="198" cy="122" r="6"/><path class="rz" d="M180,134 Q186,140 192,134 Z"/><path d="M168,144 Q174,150 180,146 M186,150 Q192,144 198,146"/><path d="M186,108 L186,116 M180,112 L192,112"/></svg>`,
+    '云纹山形饽饽': `<svg viewBox="0 0 240 240"><path class="rz" d="M46,158 L104,76 L126,106 L146,62 L194,158 Q120,178 46,158 Z"/><path class="rz" d="M62,150 q0,-16 18,-16 q18,0 18,16 q-18,12 -36,0 Z"/><path class="rz" d="M148,128 q0,-14 16,-14 q16,0 16,14 q-16,10 -32,0 Z"/><path class="rz" d="M118,54 q0,-12 13,-12 q13,0 13,12 q-13,9 -26,0 Z"/><path class="rz" d="M92,100 q0,-10 12,-10 q12,0 12,10 q-12,8 -24,0 Z"/><circle class="rz" cx="120" cy="180" r="6"/><circle class="rz" cx="96" cy="172" r="5"/><circle class="rz" cx="146" cy="170" r="5"/><circle class="rz" cx="120" cy="130" r="4"/><path d="M104,84 L104,96 M118,70 L118,82"/><path d="M76,150 Q84,146 90,150"/></svg>`
+  };
+  const bunWrap = document.getElementById('bunSvgWrap');
+  const bunBtns = document.querySelectorAll('.bun-switcher button');
+  let activeBun = '枣山饽饽';
+  let currentColor = '#b03a2e';
+  function renderBun(){ bunWrap.innerHTML = BUNS[activeBun]; }
+  renderBun();
+  bunBtns.forEach(b => b.addEventListener('click', () => {
+    bunBtns.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    activeBun = b.dataset.bun;
+    renderBun();
+  }));
+  const swatches = document.querySelectorAll('.swatch');
+  swatches.forEach(s => s.addEventListener('click', () => {
+    swatches.forEach(x => x.classList.remove('active'));
+    s.classList.add('active');
+    currentColor = s.dataset.color;
+  }));
+  bunWrap.addEventListener('click', e => {
+    if (e.target.classList && e.target.classList.contains('rz')) {
+      e.target.setAttribute('fill', currentColor);
+    }
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    bunWrap.querySelectorAll('.rz').forEach(el => el.removeAttribute('fill'));
+  });
+
+  // ===== 文创图片预览弹窗 =====
+  const zoomables = [...document.querySelectorAll('[data-front]')];
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lbImg');
+  const lbCaption = document.getElementById('lbCaption');
+  const lbFlip = document.getElementById('lbFlip');
+  let curIdx = 0;
+  function showLB(){
+    const item = zoomables[curIdx];
+    const front = item.dataset.front;
+    const back = item.dataset.back;
+    lbImg.src = front;
+    lbImg.dataset.front = front;
+    lbImg.dataset.back = back || '';
+    lbFlip.style.display = back ? 'inline-block' : 'none';
+    lbFlip.dataset.showing = 'front';
+    lbFlip.textContent = '翻看反面';
+    lbCaption.innerHTML = '<b>' + item.dataset.title + '</b><br>' + item.dataset.desc;
+  }
+  function openLB(i){ curIdx = i; showLB(); lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeLB(){ lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+  lbFlip.addEventListener('click', () => {
+    const front = lbImg.dataset.front, back = lbImg.dataset.back;
+    if (!back) return;
+    if (lbFlip.dataset.showing === 'front') { lbImg.src = back; lbFlip.textContent = '翻看正面'; lbFlip.dataset.showing = 'back'; }
+    else { lbImg.src = front; lbFlip.textContent = '翻看反面'; lbFlip.dataset.showing = 'front'; }
+  });
+  document.getElementById('lbClose').addEventListener('click', closeLB);
+  document.getElementById('lbPrev').addEventListener('click', e => { e.stopPropagation(); curIdx = (curIdx - 1 + zoomables.length) % zoomables.length; showLB(); });
+  document.getElementById('lbNext').addEventListener('click', e => { e.stopPropagation(); curIdx = (curIdx + 1) % zoomables.length; showLB(); });
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowLeft') { curIdx = (curIdx - 1 + zoomables.length) % zoomables.length; showLB(); }
+    if (e.key === 'ArrowRight') { curIdx = (curIdx + 1) % zoomables.length; showLB(); }
+  });
+  zoomables.forEach((item, i) => {
+    const trigger = item.classList.contains('cc-item') ? item.querySelector('.cc-img') : item;
+    trigger.addEventListener('click', () => openLB(i));
+  });
+
+  // ===== 首页蒸汽粒子动画 =====
+  (function(){
+    const canvas = document.getElementById('steamCanvas');
+    const ctx = canvas.getContext('2d');
+    const isMobile = window.innerWidth < 640;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+    const verse = document.querySelector('.hero .verse');
+    let W, H, ceiling;
+    function resize(){
+      W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W * DPR; canvas.height = H * DPR;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      const ct = canvas.getBoundingClientRect().top;
+      ceiling = (verse.getBoundingClientRect().bottom - ct) + 14;
+    }
+    resize(); window.addEventListener('resize', resize);
+    const MAX = isMobile ? 34 : 78;
+    const RATE = isMobile ? 26 : 12;
+    let particles = [], frame = 0;
+    function make(x, y, type){
+      return {
+        x, y, type,
+        vy: -(0.22 + Math.random() * 0.38),
+        life: 0, maxLife: 90 + Math.random() * 70,
+        size: type === 'mist' ? 16 + Math.random() * 22 : type === 'gold' ? 3.5 + Math.random() * 5 : 3 + Math.random() * 4,
+        phase: Math.random() * Math.PI * 2,
+        glyph: Math.floor(Math.random() * 3)
+      };
+    }
+    function spawn(){
+      if (particles.length >= MAX) return;
+      const ex = [0.34, 0.5, 0.66][Math.floor(Math.random() * 3)];
+      const x = W * ex + (Math.random() - 0.5) * 34;
+      const y = H * 0.8 + (Math.random() - 0.5) * 16;
+      const t = ['mist', 'gold', 'red'][Math.floor(Math.random() * 3)];
+      particles.push(make(x, y, t));
+    }
+    function draw(p, a){
+      ctx.save();
+      if (p.type === 'mist'){
+        ctx.globalAlpha = a * 0.45;
+        const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+        g.addColorStop(0, 'rgba(255,255,255,0.9)');
+        g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, 7); ctx.fill();
+      } else if (p.type === 'gold'){
+        ctx.globalAlpha = a * 0.8;
+        ctx.fillStyle = '#e8cf8a';
+        ctx.beginPath();
+        ctx.arc(p.x - p.size * 0.5, p.y, p.size * 0.55, 0, 7);
+        ctx.arc(p.x + p.size * 0.5, p.y, p.size * 0.55, 0, 7);
+        ctx.fill();
+      } else {
+        ctx.globalAlpha = a * 0.85;
+        const s = p.size;
+        if (p.glyph === 0){ // 红枣
+          ctx.fillStyle = '#a02418';
+          ctx.beginPath(); ctx.arc(p.x, p.y, s * 0.6, 0, 7); ctx.fill();
+        } else if (p.glyph === 1){ // 云纹微粒子
+          ctx.fillStyle = 'rgba(43,27,18,0.6)';
+          ctx.beginPath();
+          ctx.arc(p.x - s * 0.4, p.y, s * 0.4, 0, 7);
+          ctx.arc(p.x + s * 0.4, p.y, s * 0.4, 0, 7);
+          ctx.fill();
+        } else { // 微型光点
+          ctx.fillStyle = '#e8cf8a';
+          ctx.beginPath(); ctx.arc(p.x, p.y, s * 0.5, 0, 7); ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+    function step(){
+      frame++;
+      if (frame % RATE === 0) spawn();
+      ctx.clearRect(0, 0, W, H);
+      for (let i = particles.length - 1; i >= 0; i--){
+        const p = particles[i];
+        p.life++;
+        p.y += p.vy;
+        p.x += Math.sin((p.life * 0.028) + p.phase) * 0.3;
+        const t = p.life / p.maxLife;
+        const alpha = Math.sin(Math.PI * Math.min(t, 1));
+        draw(p, alpha);
+        if (p.life >= p.maxLife || p.y < ceiling) particles.splice(i, 1);
+      }
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+</script>
+</body>
+</html>
